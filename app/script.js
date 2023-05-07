@@ -1,5 +1,5 @@
 const React = require("react");
-const { render } = require("react-dom");
+const { createRoot } = require("react-dom/client");
 
 class App extends React.Component {
   render() {
@@ -26,4 +26,7 @@ class App extends React.Component {
   }
 }
 
-render(<App />, document.querySelector("#app"));
+const container = document.getElementById("app");
+const root = createRoot(container);
+root.render(<App />);
+// render(<App />, document.querySelector("#app"));
