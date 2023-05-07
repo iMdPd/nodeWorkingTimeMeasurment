@@ -33,10 +33,12 @@ const App = () => {
   React.useEffect(() => {
     if (time < 0 && status === "work") {
       setTime(20);
+      playBell();
       setStatus("rest");
     }
     if (time < 0 && status === "rest") {
       setTime(1200);
+      playBell();
       setStatus("work");
     }
   }, [time]);
@@ -49,6 +51,11 @@ const App = () => {
 
   const closeApp = () => {
     window.close();
+  };
+
+  const playBell = () => {
+    const bell = new Audio("./sounds/bell.wav");
+    bell.play();
   };
 
   return (
