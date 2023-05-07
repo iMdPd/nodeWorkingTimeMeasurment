@@ -9,21 +9,46 @@ const App = () => {
   const convertTime = (seconds) => {
     const mm = String(Math.floor((seconds / 60) % 60)).padStart(2, "0");
     const ss = String(Math.floor(seconds % 60)).padStart(2, "0");
-
     return `${mm}:${ss}`;
   };
 
   const startTimer = () => {
     setTime(1200);
     setStatus("work");
+    setTimer(
+      setInterval(() => {
+        setTime((prevValue) => prevValue - 1);
+      }, 1000)
+    );
+  };
 
-    if (!timer) {
-      setTimer(
-        setInterval(() => {
-          setTime((prevValue) => prevValue - 1);
-        }, 1000)
-      );
+  const stopTimer = () => {
+    if (timer) {
+      setTime(0);
+      setTimer(clearInterval(timer));
+      setStatus("off");
     }
+  };
+
+  React.useEffect(() => {
+    if (time < 0 && status === "work") {
+      setTime(20);
+      setStatus("rest");
+    }
+    if (time < 0 && status === "rest") {
+      setTime(1200);
+      setStatus("work");
+    }
+  }, [time]);
+
+  React.useEffect(() => {
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [timer]);
+
+  const closeApp = () => {
+    window.close();
   };
 
   return (
@@ -44,16 +69,20 @@ const App = () => {
       )}
       {status === "work" && <img src="./images/work.png" />}
       {status === "rest" && <img src="./images/rest.png" />}
-      {/* {status !== "off" && */}{" "}
-      <div className="timer">{convertTime(time)}</div>
-      {/* } */}
+      {status !== "off" && <div className="timer">{convertTime(time)}</div>}
       {status === "off" && (
         <button onClick={startTimer} className="btn">
           Start
         </button>
       )}
-      {status !== "off" && <button className="btn">Stop</button>}
-      <button className="btn btn-close">X</button>
+      {status !== "off" && (
+        <button onClick={stopTimer} className="btn">
+          Stop
+        </button>
+      )}
+      <button onClick={closeApp} className="btn btn-close">
+        X
+      </button>
     </div>
   );
 };
