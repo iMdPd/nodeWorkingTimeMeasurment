@@ -3,8 +3,28 @@ const { createRoot } = require("react-dom/client");
 
 const App = () => {
   const [status, setStatus] = React.useState("off");
-  const [time, setTime] = React.useState();
+  const [time, setTime] = React.useState(0);
   const [timer, setTimer] = React.useState(null);
+
+  const convertTime = (seconds) => {
+    const mm = String(Math.floor((seconds / 60) % 60)).padStart(2, "0");
+    const ss = String(Math.floor(seconds % 60)).padStart(2, "0");
+
+    return `${mm}:${ss}`;
+  };
+
+  const startTimer = () => {
+    setTime(1200);
+    setStatus("work");
+
+    if (!timer) {
+      setTimer(
+        setInterval(() => {
+          setTime((prevValue) => prevValue - 1);
+        }, 1000)
+      );
+    }
+  };
 
   return (
     <div>
@@ -24,8 +44,14 @@ const App = () => {
       )}
       {status === "work" && <img src="./images/work.png" />}
       {status === "rest" && <img src="./images/rest.png" />}
-      {status !== "off" && <div className="timer">18:23</div>}
-      {status === "off" && <button className="btn">Start</button>}
+      {/* {status !== "off" && */}{" "}
+      <div className="timer">{convertTime(time)}</div>
+      {/* } */}
+      {status === "off" && (
+        <button onClick={startTimer} className="btn">
+          Start
+        </button>
+      )}
       {status !== "off" && <button className="btn">Stop</button>}
       <button className="btn btn-close">X</button>
     </div>
